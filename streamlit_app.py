@@ -9,7 +9,7 @@ import datetime
 if not firebase_admin._apps:
     cred = credentials.Certificate(dict(st.secrets["FIREBASE_SERVICE_ACCOUNT"]))
     firebase_admin.initialize_app(cred, {
-        "databaseURL": "https://karanexports-d7f67.firebaseio.com/"
+        "databaseURL": "https://karanexports-d7f67-default-rtdb.asia-southeast1.firebasedatabase.app/"
     })
 
 # -----------------------------
