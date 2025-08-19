@@ -7,10 +7,9 @@ import json
 RTDB_URL = "https://karanexports-d7f67-default-rtdb.asia-southeast1.firebasedatabase.app/"
 
 # --- Load credentials from secrets (supports both table and JSON-string) ---
+print(st.secrets)
 if "FIREBASE" in st.secrets:
     cred_info = dict(st.secrets["FIREBASE"])        # TOML table → dict
-elif "SERVICE_ACCOUNT_JSON" in st.secrets:
-    cred_info = json.loads(st.secrets["SERVICE_ACCOUNT_JSON"])  # JSON string → dict
 else:
     st.error(f"Missing secrets. Found keys: {list(st.secrets.keys())}. "
              "Add either [FIREBASE] table or SERVICE_ACCOUNT_JSON to secrets.")
