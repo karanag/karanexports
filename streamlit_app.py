@@ -20,15 +20,7 @@ if not firebase_admin._apps:
     cred = credentials.Certificate(cred_info)
     firebase_admin.initialize_app(cred, {"databaseURL": RTDB_URL})
 
-st.success("✅ Firebase Initialized")
 
-# --- Sanity test: write + read ---
-try:
-    ref = db.reference("debug_test")
-    ref.set({"status": "ok"})
-    st.write("Readback:", ref.get())
-except Exception as e:
-    st.error(f"❌ Firebase test failed: {e}")
 
 # --- UI: Order form ---
 st.title("📦 Add New Order")
