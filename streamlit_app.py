@@ -2,24 +2,38 @@ import streamlit as st
 import firebase_admin
 from firebase_admin import credentials, db
 from datetime import datetime
+import json
 
-# ---- Firebase init
+RTDB_URL = "https://karanexports-d7f67-default-rtdb.asia-southeast1.firebasedatabase.app/"
+
+# --- Load credentials from secrets (supports both table and JSON-string) ---
+if "FIREBASE" in st.secrets:
+    cred_info = dict(st.secrets["FIREBASE"])        # TOML table → dict
+elif "SERVICE_ACCOUNT_JSON" in st.secrets:
+    cred_info = json.loads(st.secrets["SERVICE_ACCOUNT_JSON"])  # JSON string → dict
+else:
+    st.error(f"Missing secrets. Found keys: {list(st.secrets.keys())}. "
+             "Add either [FIREBASE] table or SERVICE_ACCOUNT_JSON to secrets.")
+    st.stop()
+
+# --- Init Firebase Admin ---
 if not firebase_admin._apps:
-    cred = credentials.Certificate(dict(st.secrets["FIREBASE"]))
-    firebase_admin.initialize_app(cred, {
-        "databaseURL": "https://karanexports-d7f67-default-rtdb.asia-southeast1.firebasedatabase.app/"
-    })
+    cred = credentials.Certificate(cred_info)
+    firebase_admin.initialize_app(cred, {"databaseURL": RTDB_URL})
 
-# ---- sanity test
+st.success("✅ Firebase Initialized")
+
+# --- Sanity test: write + read ---
 try:
-    db.reference("debug_test").set({"status": "ok"})
-    st.success("✅ Wrote debug_test")
-    st.write("Readback:", db.reference("debug_test").get())
+    ref = db.reference("debug_test")
+    ref.set({"status": "ok"})
+    st.write("Readback:", ref.get())
 except Exception as e:
     st.error(f"❌ Firebase test failed: {e}")
 
-# ---- your UI continues...
+# --- UI: Order form ---
 st.title("📦 Add New Order")
+
 customer = st.text_input("Customer Name")
 billing = st.text_area("Billing Address")
 shipping = st.text_area("Shipping Address")
@@ -30,12 +44,12 @@ if "items" not in st.session_state:
 
 st.subheader("Line Items")
 with st.form("item_form", clear_on_submit=True):
-    col1, col2 = st.columns(2)
-    with col1:
+    c1, c2 = st.columns(2)
+    with c1:
         design = st.text_input("Design")
         quality = st.text_input("Quality")
         size = st.text_input("Size (e.g. 6x9 ft)")
-    with col2:
+    with c2:
         qty = st.number_input("Pieces", min_value=1, step=1)
         instructions = st.text_input("Item Instructions")
     if st.form_submit_button("➕ Add Item"):
