@@ -1,6 +1,8 @@
 import streamlit as st
 import firebase_admin
 from firebase_admin import credentials, db
+from datetime import datetime
+
 
 if not firebase_admin._apps:
     cred = credentials.Certificate(st.secrets["FIREBASE_SERVICE_ACCOUNT"])
@@ -68,7 +70,7 @@ if st.button("💾 Save Order"):
             "billing_address": billing,
             "shipping_address": shipping,
             "notes": notes,
-            "date": datetime.datetime.now().isoformat(),
+            "date": datetime.now().isoformat(),
             "status": "draft",
             "items": st.session_state["items"],
         }
