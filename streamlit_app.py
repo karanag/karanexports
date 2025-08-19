@@ -1,18 +1,12 @@
 import streamlit as st
 import firebase_admin
 from firebase_admin import credentials, db
-import json
 
-# -----------------------------
-# Firebase Init
-# -----------------------------
-if not firebase_admin._apps:  # prevents re-initialization
-    cred_dict = json.loads(st.secrets["FIREBASE_SERVICE_ACCOUNT"])
-    cred = credentials.Certificate(cred_dict)
+if not firebase_admin._apps:
+    cred = credentials.Certificate(st.secrets["FIREBASE_SERVICE_ACCOUNT"])
     firebase_admin.initialize_app(cred, {
         "databaseURL": "https://karanexports-d7f67.firebaseio.com/"
     })
-
 
 import datetime
 
