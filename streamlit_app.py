@@ -9,6 +9,8 @@ if not firebase_admin._apps:
     firebase_admin.initialize_app(cred, {
         "databaseURL": "https://karanexports-d7f67-default-rtdb.asia-southeast1.firebasedatabase.app/"
     })
+
+st.write("DB Root Keys:", db.reference("/").get())
 # -----------------------------
 # UI: Order Form
 # -----------------------------
