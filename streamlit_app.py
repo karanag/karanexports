@@ -19,20 +19,12 @@ def check_login():
 
 check_login()
 
-# Sidebar nav (only once, custom)
-with st.sidebar:
-    st.header("📂 Pages")
-    page = st.radio("Go to", ["🏠 Home", "📊 Dashboard", "📝 Orders"])
-    if st.button("🚪 Logout"):
-        st.session_state.clear()
-        st.rerun()
-
-# Render pages
-if page == "🏠 Home":
-    st.title("🏠 Welcome")
-elif page == "📊 Dashboard":
-    st.title("📊 Dashboard")
-    st.write("Dashboard content here...")
-elif page == "📝 Orders":
-    st.title("📝 Orders")
-    st.write("Orders page here...")
+st.markdown(
+    """
+    <style>
+    section[data-testid="stSidebarNav"] > div:first-child {display: none;} /* app title */
+    [data-testid="stSidebarNav"] div:has(> p) {display: none;} /* "Navigation / Choose..." */
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
