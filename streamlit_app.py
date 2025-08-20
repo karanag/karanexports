@@ -3,15 +3,9 @@ import streamlit as st
 def check_login():
     if "logged_in" not in st.session_state:
         st.session_state["logged_in"] = False
-
     if not st.session_state["logged_in"]:
-        # Hide sidebar until login
-        st.markdown(
-            "<style>[data-testid='stSidebar'] {display: none;}</style>",
-            unsafe_allow_html=True,
-        )
+        st.markdown("<style>[data-testid='stSidebar']{display:none;}</style>", unsafe_allow_html=True)
         st.title("🔒 Login")
-
         with st.form("login_form"):
             username = st.text_input("Username")
             password = st.text_input("Password", type="password")
@@ -25,13 +19,20 @@ def check_login():
 
 check_login()
 
-# After login
-st.title("🏠 Welcome")
-
-# Show sidebar only after login, and no default "Navigation" text
+# Sidebar nav (only once, custom)
 with st.sidebar:
     st.header("📂 Pages")
-    st.page_link("streamlit_app.py", label="🏠 Home")
-    st.page_link("pages/1_Dashboard.py", label="📊 Dashboard")
-    st.page_link("pages/2_Orders.py", label="📝 Orders")
-    st.button("🚪 Logout", on_click=lambda: st.session_state.clear() or st.rerun())
+    page = st.radio("Go to", ["🏠 Home", "📊 Dashboard", "📝 Orders"])
+    if st.button("🚪 Logout"):
+        st.session_state.clear()
+        st.rerun()
+
+# Render pages
+if page == "🏠 Home":
+    st.title("🏠 Welcome")
+elif page == "📊 Dashboard":
+    st.title("📊 Dashboard")
+    st.write("Dashboard content here...")
+elif page == "📝 Orders":
+    st.title("📝 Orders")
+    st.write("Orders page here...")
