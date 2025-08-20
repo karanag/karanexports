@@ -1,11 +1,19 @@
 import streamlit as st
 
+def hide_sidebar():
+    hide_style = """
+        <style>
+        [data-testid="stSidebar"] {display: none;}
+        </style>
+    """
+    st.markdown(hide_style, unsafe_allow_html=True)
+
 def check_login():
     if "logged_in" not in st.session_state:
         st.session_state["logged_in"] = False
 
-    # Show login form if not logged in
     if not st.session_state["logged_in"]:
+        hide_sidebar()   # hide sidebar before login
         st.title("🔒 Login")
 
         with st.form("login_form"):
@@ -17,15 +25,14 @@ def check_login():
             if username == "Karan" and password == "1234":
                 st.session_state["logged_in"] = True
                 st.success("✅ Login successful")
-                st.rerun()   # use new API
+                st.rerun()
             else:
                 st.error("Invalid credentials")
-
-        # stop execution until login
         st.stop()
 
 check_login()
 
 # --- After login ---
 st.title("🏠 Welcome")
-st.write("Use the sidebar to navigate pages once logged in.")
+st.sidebar.title("Navigation")
+st.sidebar.write("Choose a page here...")
