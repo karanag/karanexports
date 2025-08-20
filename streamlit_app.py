@@ -16,6 +16,8 @@ def check_login():
                 else:
                     st.error("Invalid credentials")
         st.stop()
+    else:
+        st.title("Welcome to KE")
 
 check_login()
 
